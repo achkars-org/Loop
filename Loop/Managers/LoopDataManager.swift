@@ -1813,8 +1813,10 @@ extension LoopDataManager {
 
             // automaticDosingIOBLimit calculated from the user entered maxBolus
             let automaticDosingIOBLimit = maxBolus! * 2.0
-            let iobHeadroom = automaticDosingIOBLimit - self.insulinOnBoard!.value
-
+            // iobHeadroom is set to 0 if limitAutomaticDosing override is active
+            let iobHeadroom = settings.scheduleOverride?.settings.limitAutomaticDosing == true
+                ? 0.0
+                : automaticDosingIOBLimit - self.insulinOnBoard!.value
             switch settings.automaticDosingStrategy {
             case .automaticBolus:
                 let volumeRounder = { (_ units: Double) in
